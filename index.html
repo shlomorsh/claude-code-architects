@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>קלוד קוד לאדריכלים ומתכנני ערים — הקורס</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blueprint:#0E1B2E;
+  --blueprint-2:#13243d;
+  --cream:#F5F1E8;
+  --claude:#D97757;
+  --claude-dark:#c25e3f;
+  --ink:#1a2233;
+  --muted:#5a6677;
+  --line:rgba(14,27,46,.10);
+  /* accent הנוכחי של התמה — מתחלף ב-JS */
+  --accent:#E51050;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Heebo',sans-serif;
+  background:var(--cream);
+  color:var(--ink);
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+.wrap{max-width:760px;margin:0 auto;padding:0 22px}
+section{position:relative}
+
+/* ============ HERO ============ */
+.hero{
+  position:relative;
+  min-height:100svh;
+  background:var(--blueprint);
+  color:var(--cream);
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+/* גריד תכנוני בסיסי */
+.hero::before{
+  content:"";
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(245,241,232,.045) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(245,241,232,.045) 1px,transparent 1px);
+  background-size:34px 34px;
+  pointer-events:none;
+  z-index:0;
+}
+/* שכבת התמה המתחלפת — מוטיב טכני עדין */
+.theme-layer{
+  position:absolute;inset:0;z-index:0;pointer-events:none;
+  opacity:.5;
+}
+.theme-svg{position:absolute;inset:0;width:100%;height:100%;
+  opacity:0;transition:opacity 1.4s ease;}
+.theme-svg.active{opacity:1}
+
+.hero-inner{
+  position:relative;z-index:2;
+  flex:1;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:64px 22px 0;
+  max-width:760px;margin:0 auto;width:100%;
+}
+.theme-badge{
+  position:absolute;top:18px;left:22px;z-index:3;
+  display:flex;align-items:center;gap:8px;
+  font-size:11px;letter-spacing:.5px;
+  color:rgba(245,241,232,.55);
+  font-weight:500;
+}
+.theme-badge .dot{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--accent);
+  box-shadow:0 0 10px var(--accent);
+  transition:background .8s ease,box-shadow .8s ease;
+}
+.theme-badge .nm{transition:color .6s ease}
+
+.eyebrow{
+  display:inline-flex;align-items:center;gap:7px;
+  font-size:12.5px;letter-spacing:.4px;font-weight:500;
+  color:var(--claude);
+  border:1px solid rgba(217,119,87,.4);
+  padding:5px 13px;border-radius:40px;
+  margin-bottom:22px;align-self:flex-start;
+  background:rgba(217,119,87,.08);
+}
+.hero h1{
+  font-size:clamp(27px,7vw,46px);
+  font-weight:900;line-height:1.18;
+  letter-spacing:-.5px;
+  margin-bottom:20px;
+}
+.hero h1 .hl{color:var(--claude)}
+.hero p.lead{
+  font-size:clamp(16px,4.2vw,20px);
+  font-weight:300;
+  color:rgba(245,241,232,.82);
+  max-width:600px;margin-bottom:14px;
+}
+.hero .punch{
+  font-size:clamp(17px,4.4vw,21px);
+  font-weight:700;color:var(--cream);
+  margin:18px 0 10px;
+}
+.hero .door{
+  font-size:clamp(15px,4vw,18px);
+  color:rgba(245,241,232,.7);font-weight:300;
+  margin-bottom:18px;
+}
+.hero .who{
+  font-size:13.5px;color:rgba(245,241,232,.5);
+  border-right:2px solid var(--claude);
+  padding-right:12px;margin-bottom:30px;font-weight:300;
+  max-width:520px;
+}
+
+/* CTA */
+.cta{
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  background:var(--claude);color:#fff;
+  font-family:inherit;font-size:16px;font-weight:700;
+  padding:15px 30px;border-radius:11px;
+  text-decoration:none;border:none;cursor:pointer;
+  box-shadow:0 8px 26px rgba(217,119,87,.32);
+  transition:transform .15s ease,box-shadow .15s ease,background .15s ease;
+  align-self:flex-start;
+}
+.cta:hover{transform:translateY(-2px);background:var(--claude-dark);box-shadow:0 12px 32px rgba(217,119,87,.42)}
+.cta .arr{font-size:18px;line-height:1}
+.cta.center{align-self:center}
+
+/* מחוון גלילה */
+.scroll-cue{
+  position:relative;z-index:2;
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  padding-bottom:14px;
+  color:rgba(245,241,232,.6);
+}
+.scroll-cue .txt{font-size:12.5px;font-weight:400;letter-spacing:.3px}
+.scroll-cue .chev{
+  font-size:22px;line-height:1;
+  animation:bob 1.6s ease-in-out infinite;
+}
+@keyframes bob{0%,100%{transform:translateY(0);opacity:.55}50%{transform:translateY(7px);opacity:1}}
+
+/* הצצה לסקשן הבא — שורה בתחתית ה-hero */
+.peek{
+  position:relative;z-index:2;
+  background:var(--cream);
+  color:var(--ink);
+  border-top-right-radius:22px;border-top-left-radius:22px;
+  margin-top:8px;
+  padding:20px 22px 10px;
+  text-align:center;
+}
+.peek .kicker{font-size:12px;letter-spacing:1px;color:var(--accent);font-weight:700;transition:color .6s ease}
+.peek h2{font-size:clamp(18px,5vw,24px);font-weight:700;margin-top:4px;color:var(--ink)}
+
+/* ============ כללי לסקשנים ============ */
+.sec{padding:54px 0}
+.sec .wrap{max-width:760px}
+.kicker{
+  display:block;font-size:12px;letter-spacing:1.4px;font-weight:700;
+  color:var(--accent);text-transform:uppercase;margin-bottom:10px;
+  transition:color .6s ease;
+}
+.sec h2{
+  font-size:clamp(22px,5.5vw,32px);font-weight:900;line-height:1.22;
+  letter-spacing:-.4px;margin-bottom:18px;color:var(--ink);
+}
+.sec h3{font-size:clamp(17px,4.5vw,21px);font-weight:700;margin:24px 0 10px;color:var(--ink)}
+.sec p{font-size:16px;color:var(--muted);margin-bottom:14px}
+.sec p strong{color:var(--ink);font-weight:700}
+.sec.alt{background:var(--blueprint);color:var(--cream);position:relative;overflow:hidden}
+.sec.alt::before{
+  content:"";position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(245,241,232,.05) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(245,241,232,.05) 1px,transparent 1px);
+  background-size:34px 34px;pointer-events:none;
+}
+.sec.alt .wrap{position:relative;z-index:1}
+.sec.alt h2,.sec.alt h3{color:var(--cream)}
+.sec.alt p{color:rgba(245,241,232,.78)}
+.sec.alt p strong{color:#fff}
+
+/* כרטיסים */
+.cards{display:grid;gap:14px;margin-top:8px}
+.card{
+  background:#fff;border:1px solid var(--line);border-radius:14px;
+  padding:20px 20px;position:relative;overflow:hidden;
+}
+.card::before{content:"";position:absolute;top:0;right:0;width:4px;height:100%;background:var(--accent);transition:background .6s ease}
+.sec.alt .card{background:rgba(245,241,232,.05);border-color:rgba(245,241,232,.12)}
+.sec.alt .card h3{color:#fff}
+.sec.alt .card p{color:rgba(245,241,232,.72)}
+.card h3{margin-top:0}
+.card .num{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:30px;height:30px;border-radius:8px;
+  background:var(--claude);color:#fff;font-weight:900;font-size:15px;
+  margin-bottom:10px;
+}
+
+/* השוואה VS Code מול דסקטופ */
+.vs{display:grid;gap:0;margin:8px 0 0;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.vs .row{display:grid;grid-template-columns:1fr;border-top:1px solid var(--line)}
+.vs .row:first-child{border-top:none}
+.vs .col{padding:14px 16px;font-size:14.5px}
+.vs .col.vscode{background:rgba(217,119,87,.07)}
+.vs .col.vscode .tag{color:var(--claude);font-weight:700;font-size:12px;display:block;margin-bottom:3px}
+.vs .col.desk{background:#fff}
+.vs .col.desk .tag{color:var(--muted);font-weight:700;font-size:12px;display:block;margin-bottom:3px}
+
+/* מפגשים */
+.lessons{display:grid;gap:0}
+.lesson{
+  display:grid;grid-template-columns:auto 1fr;gap:16px;
+  padding:20px 0;border-top:1px solid rgba(245,241,232,.12);
+}
+.lesson:first-child{border-top:none}
+.lesson .ix{
+  font-size:32px;font-weight:900;color:var(--claude);
+  line-height:1;min-width:38px;
+}
+.lesson h3{margin:0 0 4px;font-size:18px}
+.lesson p{margin:0;font-size:14.5px}
+
+/* הוכחה / תמונה */
+.proof-img{
+  width:100%;border-radius:12px;border:1px solid var(--line);
+  box-shadow:0 14px 40px rgba(14,27,46,.18);display:block;margin:6px 0 16px;
+}
+.testi-ph{
+  border:1.5px dashed rgba(245,241,232,.3);border-radius:12px;
+  padding:26px 20px;text-align:center;color:rgba(245,241,232,.6);
+  background:rgba(245,241,232,.03);font-size:14px;
+}
+
+/* התאמה / למי */
+.fit{display:grid;gap:14px;margin-top:6px}
+.fit .box{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+.fit .box.yes{border-right:4px solid #2e9e6b}
+.fit .box.no{border-right:4px solid var(--muted)}
+.fit .box h3{margin-top:0;font-size:16px}
+.fit .box ul{list-style:none;margin:8px 0 0}
+.fit .box li{font-size:14.5px;color:var(--muted);padding:6px 0 6px 0;position:relative;padding-right:22px}
+.fit .box.yes li::before{content:"✓";position:absolute;right:0;color:#2e9e6b;font-weight:900}
+.fit .box.no li::before{content:"–";position:absolute;right:0;color:var(--muted);font-weight:900}
+.notreq{font-size:14px;color:var(--ink);background:rgba(217,119,87,.08);border-radius:10px;padding:12px 16px;margin-top:14px}
+
+/* בונוס */
+.bonus{
+  background:linear-gradient(135deg,var(--blueprint),var(--blueprint-2));
+  border:1px solid rgba(217,119,87,.3);
+  border-radius:16px;padding:26px 22px;color:var(--cream);position:relative;overflow:hidden;
+}
+.bonus .tagline{color:var(--claude);font-weight:700;font-size:13px;letter-spacing:.5px;margin-bottom:8px}
+.bonus h3{color:#fff;margin-top:0}
+.bonus p{color:rgba(245,241,232,.8)}
+.bonus .closed{display:inline-block;margin-top:10px;font-size:13px;color:#fff;background:rgba(217,119,87,.25);border:1px solid rgba(217,119,87,.45);padding:5px 12px;border-radius:8px;font-weight:700}
+.limited{text-align:center;margin:22px 0 0;font-size:15px;color:#fff;font-weight:400}
+.limited strong{color:var(--claude)}
+
+/* final CTA */
+.final{background:var(--blueprint);color:var(--cream);text-align:center;padding:60px 22px;position:relative;overflow:hidden}
+.final::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(245,241,232,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(245,241,232,.05) 1px,transparent 1px);background-size:34px 34px}
+.final .wrap{position:relative;z-index:1}
+.final h2{color:#fff}
+.final .pay{font-size:13.5px;color:rgba(245,241,232,.6);margin-top:16px}
+.closing{font-style:italic;font-size:clamp(16px,4.5vw,20px);color:var(--cream);font-weight:300;margin-top:30px;opacity:.85}
+
+/* sticky CTA נייד */
+.sticky-cta{
+  position:fixed;bottom:0;left:0;right:0;z-index:50;
+  background:rgba(14,27,46,.96);backdrop-filter:blur(8px);
+  border-top:1px solid rgba(217,119,87,.3);
+  padding:10px 16px;display:none;
+  box-shadow:0 -6px 24px rgba(0,0,0,.3);
+}
+.sticky-cta a{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  background:var(--claude);color:#fff;font-weight:700;font-size:15.5px;
+  padding:13px;border-radius:10px;text-decoration:none;
+}
+
+/* ===== Desktop ===== */
+@media(min-width:720px){
+  .vs .row{grid-template-columns:1fr 1fr}
+  .vs .col.vscode{border-left:1px solid var(--line)}
+  .fit{grid-template-columns:1fr 1fr;align-items:start}
+  .fit .box.no{grid-column:1 / -1}
+}
+/* ===== Mobile sticky on ===== */
+@media(max-width:719px){
+  .sticky-cta{display:block}
+  body{padding-bottom:66px}
+}
+</style>
+</head>
+<body>
+
+<!-- ===================== HERO ===================== -->
+<section class="hero" id="top">
+  <div class="theme-badge">
+    <span class="dot"></span>
+    <span class="nm">AutoCAD</span>
+  </div>
+
+  <!-- שכבת תמות מתחלפות -->
+  <div class="theme-layer">
+    <!-- AutoCAD: גריד CAD + קווי מידה -->
+    <svg class="theme-svg active" data-theme="autocad" viewBox="0 0 760 900" preserveAspectRatio="xMidYMid slice" stroke="#E51050" fill="none">
+      <g stroke-width="1" opacity=".5">
+        <rect x="120" y="120" width="520" height="300"/>
+        <rect x="180" y="180" width="200" height="180"/>
+        <line x1="120" y1="470" x2="640" y2="470"/>
+        <line x1="120" y1="460" x2="120" y2="480"/><line x1="640" y1="460" x2="640" y2="480"/>
+        <line x1="90" y1="120" x2="90" y2="420"/>
+        <line x1="80" y1="120" x2="100" y2="120"/><line x1="80" y1="420" x2="100" y2="420"/>
+        <circle cx="500" cy="300" r="60"/>
+        <line x1="440" y1="300" x2="560" y2="300" stroke-dasharray="6 5"/>
+      </g>
+    </svg>
+    <!-- Revit: אלמנטי BIM, חתכי קומות -->
+    <svg class="theme-svg" data-theme="revit" viewBox="0 0 760 900" preserveAspectRatio="xMidYMid slice" stroke="#176BFF" fill="none">
+      <g stroke-width="1.2" opacity=".5">
+        <rect x="160" y="140" width="440" height="80"/>
+        <rect x="160" y="240" width="440" height="80"/>
+        <rect x="160" y="340" width="440" height="80"/>
+        <line x1="260" y1="140" x2="260" y2="420"/>
+        <line x1="500" y1="140" x2="500" y2="420"/>
+        <rect x="300" y="260" width="40" height="60" fill="#176BFF" fill-opacity=".15"/>
+        <rect x="420" y="160" width="40" height="60" fill="#176BFF" fill-opacity=".15"/>
+        <circle cx="600" cy="500" r="3" fill="#176BFF"/><circle cx="160" cy="500" r="3" fill="#176BFF"/>
+        <line x1="160" y1="500" x2="600" y2="500" stroke-dasharray="2 6"/>
+      </g>
+    </svg>
+    <!-- SketchUp: צורות איזומטריות -->
+    <svg class="theme-svg" data-theme="sketchup" viewBox="0 0 760 900" preserveAspectRatio="xMidYMid slice" stroke="#005F9E" fill="none">
+      <g stroke-width="1.3" opacity=".55">
+        <polygon points="380,160 540,250 540,430 380,520 220,430 220,250"/>
+        <line x1="380" y1="160" x2="380" y2="340"/>
+        <line x1="380" y1="340" x2="540" y2="430"/>
+        <line x1="380" y1="340" x2="220" y2="430"/>
+        <polygon points="380,160 460,205 380,250 300,205" fill="#005F9E" fill-opacity=".12"/>
+        <line x1="120" y1="600" x2="640" y2="600" stroke-dasharray="4 6" opacity=".5"/>
+      </g>
+    </svg>
+    <!-- Rhino: רשת mesh / NURBS -->
+    <svg class="theme-svg" data-theme="rhino" viewBox="0 0 760 900" preserveAspectRatio="xMidYMid slice" stroke="#990000" fill="none">
+      <g stroke-width="1" opacity=".5">
+        <path d="M140 420 C 240 240, 520 240, 620 420"/>
+        <path d="M140 460 C 240 300, 520 300, 620 460"/>
+        <path d="M140 380 C 240 200, 520 200, 620 380"/>
+        <line x1="200" y1="250" x2="200" y2="445"/>
+        <line x1="290" y1="218" x2="290" y2="470"/>
+        <line x1="380" y1="208" x2="380" y2="478"/>
+        <line x1="470" y1="218" x2="470" y2="470"/>
+        <line x1="560" y1="250" x2="560" y2="445"/>
+      </g>
+    </svg>
+  </div>
+
+  <div class="hero-inner">
+    <span class="eyebrow">קורס Claude Code לאדריכלים ומתכנני ערים</span>
+    <h1>ניסית להכניס את <span class="hl">קלוד קוד</span> לעבודה — והרגשת שהוא פשוט לא עושה מה שביקשת?</h1>
+    <p class="lead">עם קבצי רוויט, אוטוקאד, תיקיות בפרויקט — הוא חושב הרבה, יוצא עם כל מיני דברים, ולפעמים פשוט לא מגיע לשום מקום.</p>
+    <p class="punch">זה לא אשמתך. וזה לא שקלוד חלש.</p>
+    <p class="door">הבעיה היא דלת אחת — הדרך שדרכה נכנסת אליו.</p>
+    <p class="who">למי זה רלוונטי: אדריכלים ומתכנני ערים שרוצים שקלוד יעבוד עם הקבצים שלהם — לא רק לענות על שאלות.</p>
+    <a class="cta" href="/course/register">להרשמה לקורס <span class="arr">←</span></a>
+  </div>
+
+  <div class="scroll-cue">
+    <span class="txt">גלול להבין למה</span>
+    <span class="chev">↓</span>
+  </div>
+
+  <!-- הצצה לסקשן הבא -->
+  <div class="peek">
+    <span class="kicker">מה שקורה בפועל</span>
+    <h2>שתי הדוגמאות שכל אדריכל מכיר</h2>
+  </div>
+</section>
+
+<!-- ===================== 2 — שתי הדוגמאות ===================== -->
+<section class="sec" id="examples">
+  <div class="wrap">
+    <h3>ניסית לחבר את קלוד לאוטוקאד?</h3>
+    <p>כשעובדים עם אפליקציית הדסקטופ הרגילה, קלוד לא מחובר ישירות לתוכנה. אז במקום לכתוב קוד שעושה את העבודה, הוא הולך בדרך המסובכת — שולט פיזית על המחשב: מזיז עכבר, לוחץ על כפתורים בממשק, מקליד פקודות.</p>
+    <p>הוא כן פועל — אבל בדרך גמלונית. זה נשמע מרשים, ובפועל יוצא איטי ושביר. נכשל כל פעם שחלון קצת זז, שתוכנה קצת אטית, שמשהו קטן לא בדיוק במקום שהוא ציפה. שעות של ניסיון. תוצאה אפסית.</p>
+    <h3>ביקשת ממנו לעשות פעולה על תיקייה שלמה?</h3>
+    <p>לסדר קבצים, לשנות שמות, להמיר PDFs, להוציא מידע מרשימת DWFs — מה שלא יהיה.</p>
+    <p>הוא חושב. מאריך. ואחרי כל זה — מוציא לך קובץ טקסט. הסביבה שלו מוגבלת, אז במקום להריץ את הכלי בעצמו, הוא כותב סקריפט ומבקש שאתה תפתח, תריץ, ותקווה שיעבוד.</p>
+    <p><strong>הוא כן יכול לעבוד — אבל בדרך עקיפה: כתב לך הוראות לביצוע במקום לבצע ישר. ואתה קיבלת עוד דבר לנהל.</strong></p>
+    <p>זה בדיוק ההפך מחיסכון בזמן.</p>
+  </div>
+</section>
+
+<!-- ===================== 3 — למה זה קורה ===================== -->
+<section class="sec alt" id="why">
+  <div class="wrap">
+    <span class="kicker">למה זה קורה</span>
+    <h2>אפליקציית הדסקטופ לא "חלשה" — היא פשוט כלי אחר</h2>
+    <p>אפליקציית הדסקטופ עובדת מצוין למה שהיא נועדה: שיחה, כתיבה, ניסוח, עזרה בחשיבה. מי שכותב מסמכים, מכין מצגות, שואל שאלות — יצא בסדר.</p>
+    <p>אבל למי שרוצה שקלוד יעבוד עם קבצים מקומיים, יריץ כלים, יפעל על תיקיות, יחבר למאגרי מידע — האפליקציה הזו היא הדלת הלא נכונה.</p>
+    <p>קלוד יושב בתוכה, רחוק מהסביבה שאתה עובד בה — הקבצים שלך, התוכנות שלך, הנתיבים שלך. הוא כן יכול לפעול על המחשב — אבל בדרך עקיפה ומסובכת: שליטה פיזית בעכבר, או כתיבת סקריפט שתריץ בעצמך. הוא עובד מסביב לחסם במקום ישר, ולכן לפעמים מפספס.</p>
+    <p><strong>הכלי שמספק את הגישה האמיתית הוא VS Code.</strong></p>
+  </div>
+</section>
+
+<!-- ===================== 4 — הפתרון ===================== -->
+<section class="sec" id="solution">
+  <div class="wrap">
+    <span class="kicker">הפתרון</span>
+    <h2>למה VS Code משנה הכל</h2>
+    <p><strong>VS Code</strong> הוא עורך קוד מקצועי של מיקרוסופט, חינמי, שבו יש שילוב ישיר עם קלוד קוד. כשעובדים שם — המשחק שונה לחלוטין.</p>
+    <div class="cards">
+      <div class="card">
+        <span class="num">1</span>
+        <h3>הקשר: קלוד רואה מה שפתוח אצלך</h3>
+        <p>ב-VS Code, קלוד רואה אוטומטית אילו קבצים פתוחים, קורא שורות ספציפיות, מזהה שגיאות לבד. הוא בפנים — לא מסתכל מבחוץ. הפתרון מדויק כי הוא מבוסס על מה שבאמת קיים אצלך.</p>
+        <p>באפליקציית הדסקטופ הוא מבודד. צריך שתעתיק לו הכל ידנית. וכשחסר לו מידע, הוא לפעמים ממציא פתרונות שנשמעים הגיוניים אבל לא עובדים — "הזיות".</p>
+      </div>
+      <div class="card">
+        <span class="num">2</span>
+        <h3>חיבור כלים: פשוט ב-VS Code, מסורבל בדסקטופ</h3>
+        <p>כדי שקלוד יעבוד עם הקבצים שלך, צריך לחבר אליו "כלים" — גשרים לנתונים, לתיקיות, למאגרים חיצוניים.</p>
+        <div class="vs">
+          <div class="row">
+            <div class="col vscode"><span class="tag">VS Code</span>חיבור פשוט ומהיר דרך שורת הפקודה.</div>
+            <div class="col desk"><span class="tag">דסקטופ</span>קובץ הגדרות נסתר. פסיק אחד שגוי מוחק את כל הכלים בלי התראה. אדריכלים רבים ניסו ועזבו שם.</div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <span class="num">3</span>
+        <h3>יציבות: VS Code לא קורס</h3>
+        <p>VS Code הוא מוצר של מיקרוסופט, יציב ומגובה. קלוד קוד רץ בתוכו בצורה אמינה.</p>
+        <p>אפליקציית הדסקטופ — קריסות לא מוסברות, Windows ARM שנסגר פתאום, Mac שמבקש אימות מחדש. לא כל הזמן, אבל מספיק כדי להפריע לעבודה אמיתית.</p>
+      </div>
+      <div class="card">
+        <span class="num">4</span>
+        <h3>עלות: תשלום רק על מה שמשתמשים</h3>
+        <p>ב-VS Code עם קלוד קוד, משלמים לפי שימוש — על מה שמשתמשים בו בפועל. אפשר אפילו להתחיל עם מודלים חינמיים.</p>
+        <p>מנוי אפליקציית הדסקטופ — תשלום חודשי קבוע בכל מקרה, ובעבודה אינטנסיבית יש מגבלות שנועלות ומחייבות המתנה.</p>
+      </div>
+      <div class="card">
+        <span class="num">5</span>
+        <h3>שליטה: אתה קובע מה קורה</h3>
+        <p>ב-VS Code יש "Plan Mode" — קלוד מציג תוכנית, אתה מאשר לפני שהוא עושה כלום. ויש "Auto Mode" — הוא רץ לבד. אתה בוחר.</p>
+        <p>באפליקציית הדסקטופ — אישורים נוקשים, פחות גמישות, פחות שליטה בזרימת העבודה.</p>
+      </div>
+    </div>
+    <a class="cta center" href="/course/register" style="margin-top:26px">להרשמה לקורס <span class="arr">←</span></a>
+  </div>
+</section>
+
+<!-- ===================== 5 — המחשב צריך התאמה ===================== -->
+<section class="sec alt" id="infra">
+  <div class="wrap">
+    <span class="kicker">מה שמסבך את ההתחלה</span>
+    <h2>קלוד לבד לא מספיק — המחשב צריך "ידיים ורגליים"</h2>
+    <p>כדי שקלוד יוכל לפעול על המחשב שלך — לקרוא קבצים, לכתוב לתיקיות, להריץ פקודות, להתחבר לשירותים חיצוניים — צריך להתקין עליו כלים וספריות שנותנות לו את הגישה הזו.</p>
+    <p>בלי הכלים והספריות המותקנים, גם VS Code לא ימצה את הפוטנציאל. קלוד יהיה שם, אבל מוגבל — חסרים לו הכלים שיתנו לו את מלוא הגישה.</p>
+    <p>זו הסיבה שרוב האנשים שמנסים מגיעים לאותה תחושה: "זה לא עובד כמו שציפיתי". לא בגלל שקלוד חלש — בגלל שהתשתית שמאחוריו לא הוכנה.</p>
+    <p>לפני כשנה, עברתי למחשב חדש. הבנתי כמה קשה להתחיל מאפס — כמה כלים לאסוף, כמה הגדרות לגעת בהן, כמה דברים שצריך לדעת שקיימים כדי שבכלל תדע לחפש אותם.</p>
+    <p>אז ריכזתי את כל מה שבניתי — כל התשתית — להתקנה אחת שמכינה את המחשב שלך מאפס. מחשב רגיל הופך למחשב עם יכולות פיתוח מלאות, בלי שתצטרך לדעת מה אתה עושה בדרך.</p>
+    <p><strong>את התשתית הזו אני נותן למשתתפי הקורס, עם הוראות התקנה עוד לפני שמתחילים.</strong> מתחילים עשרה צעדים קדימה — לא מתאבקים בהתקנות ביום הראשון.</p>
+  </div>
+</section>
+
+<!-- ===================== 6 — הקורס ===================== -->
+<section class="sec" id="course">
+  <div class="wrap">
+    <span class="kicker">מה שעושים יחד</span>
+    <h2>קורס Claude Code לאדריכלים ומתכנני ערים</h2>
+    <p>4 מפגשים, שעה וחצי כל אחד. זום. הקלטות שנשארות אצלך לשנה.</p>
+    <p>אני אדריכל. עבדתי עם הכלים שאתם עובדים איתם — רוויט, קבצי GIS, מסמכי תכנון, מבא"ת. בניתי כלים שעושים עבודה שלוקחת ימים בשעה.</p>
+    <p><strong>הקורס הזה מלמד אתכם לבנות את אותם כלים — בלי שורת קוד אחת. רק הוראות בעברית.</strong></p>
+
+    <div class="lessons" style="margin-top:22px">
+      <div class="lesson">
+        <div class="ix">1</div>
+        <div>
+          <h3>הכלי הראשון שלך</h3>
+          <p>מקבלים את התשתית, מתקינים, ויוצאים עם כלי עובד ביד. לא "מה זה קלוד קוד". כלי שרץ ועושה משהו אמיתי בפרויקט שלך. בסוף המפגש אתה לא שואל שאלות — אתה בונה.</p>
+        </div>
+      </div>
+      <div class="lesson">
+        <div class="ix">2</div>
+        <div>
+          <h3>מחברים לכלים שלך</h3>
+          <p>אוטוקאד. רוויט. קבצי GIS. לומדים איך קלוד קורא את הקבצים שיושבים אצלך, פועל עליהם, ומוציא תוצאות — בלי שתגיד לו מחדש מה יש לך.</p>
+        </div>
+      </div>
+      <div class="lesson">
+        <div class="ix">3</div>
+        <div>
+          <h3>גישה לשרתים חיצוניים</h3>
+          <p>במקום לנהל עשרה שירותים שונים — חיבור אחד שמקשר את קלוד למאגרי המידע שעובדים איתם בתכנון ובהיתרים. זה מה שהופך כלי רגיל לכלי שיודע.</p>
+        </div>
+      </div>
+      <div class="lesson">
+        <div class="ix">4</div>
+        <div>
+          <h3>הפרויקט שלך</h3>
+          <p>כל אחד מביא את האתגר הספציפי שלו. ביחד בונים את הכלי שייחסוך לך את הזמן שאתה הכי רוצה לחסוך. זו הנקודה שכל מה שלפניה בנה אליה.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:22px">
+      <h3 style="margin-top:0">בנוסף — ארגז כלים מוכן</h3>
+      <p style="margin-bottom:0">גישה לכלים שכבר בניתי: אינדקס שמושך מטא-דאטה מקבצי CAD, Revit ו-PDF — ואינטגרציות GIS לחיפוש לפי גוש וחלקה. לא בונים מאפס את מה שכבר עובד.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 7 — הוכחה ===================== -->
+<section class="sec alt" id="proof">
+  <div class="wrap">
+    <span class="kicker">הוכחה</span>
+    <h2>מה שקלוד קוד עושה בפועל</h2>
+    <p>דוגמה מהעבודה: כלי שסורק תיקייה של קבצי DWF, שולף את המטא-דאטה מכל קובץ — שם, תאריך, נתוני הגשה — ומייצר טבלה מסודרת.</p>
+    <img class="proof-img" src="dwf-self-licensing-control-demo.png" alt="טבלת מטא-דאטה שהופקה אוטומטית מקבצי DWF">
+    <p><strong>הכלי כותב, מוציא קובץ, גמר. ידנית זה שעות. עם הכלי — שניות.</strong></p>
+    <p>זו לא המרה של שאלה לתשובה. זו עבודה שנעשית בעצמה.</p>
+    <div class="testi-ph" style="margin-top:8px">
+      מקום לעדויות ממשתתפי ההרצאה — ציטוטים יתווספו כאן
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 8 — למי מתאים ===================== -->
+<section class="sec" id="fit">
+  <div class="wrap">
+    <span class="kicker">לפני שמחליטים</span>
+    <h2>למי הקורס מתאים — ולמי פחות</h2>
+    <div class="fit">
+      <div class="box yes">
+        <h3>מתאים אם</h3>
+        <ul>
+          <li>אתה אדריכל או מתכנן ערים שמרגיש שקלוד "לא ממש עובד לו" — וחסרה לו הסביבה הנכונה.</li>
+          <li>אתה כבר משתמש ב-ChatGPT או בקלוד לשאלות — ורוצה לעבור מ"שאלות" ל"כלים שעובדים".</li>
+          <li>אתה מנהל צוות ורוצה כלי שבודק תאימות לתקנים, מפיק מסמכים, מציל נתונים מקבצים — בלי שתפקח עליו כל שנייה.</li>
+        </ul>
+      </div>
+      <div class="box no">
+        <h3>פחות מתאים אם</h3>
+        <ul>
+          <li>אתה רק רוצה לשאול שאלות ולקבל תשובות — לצורך כזה אפליקציית הדסקטופ עובדת בסדר ולא צריך את הקורס.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="notreq">
+      <strong>לא נדרש:</strong> שורת קוד אחת. ידע טכני. ניסיון עם תכנות. אם אתה יכול לנהל שיחה — אתה יכול לנהל קלוד קוד.
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 9 — בונוס + מקומות ===================== -->
+<section class="sec alt" id="bonus">
+  <div class="wrap">
+    <div class="bonus">
+      <div class="tagline">הרשמה מוקדמת — בונוס אחד</div>
+      <h3>מפגש Q&amp;A חמישי</h3>
+      <p>מי שנרשם לפני הסגירה מקבל שעה שבה כל אחד מביא את הפרויקט האישי שלו ועובדים עליו יחד. זה לא מפגש תיאורטי — זו ישיבה פרטית-קבוצתית על הדבר הספציפי שאתה בונה.</p>
+      <span class="closed">הבונוס נסגר עם ההרשמה המוקדמת — אחרי כן 4 מפגשים בלבד</span>
+    </div>
+    <p class="limited"><strong>מספר מקומות מוגבל.</strong> לא "ככה אומרים בשיווק" — המפגש הרביעי, שבו בונים את הפרויקט האישי, לא עובד עם יותר מדי אנשים.</p>
+    <a class="cta center" href="/course/register" style="margin-top:22px">להרשמה לקורס <span class="arr">←</span></a>
+  </div>
+</section>
+
+<!-- ===================== 10 — מתי כן הדסקטופ ===================== -->
+<section class="sec" id="honest">
+  <div class="wrap">
+    <span class="kicker">כנות</span>
+    <h2>מתי אפליקציית הדסקטופ היא הבחירה הנכונה</h2>
+    <p>אני לא משמיץ — אני מדייק. האפליקציה לדסקטופ עדיפה בשלושה מצבים ספציפיים:</p>
+    <div class="cards">
+      <div class="card">
+        <h3>שליטה מלאה במחשב</h3>
+        <p>אם צריך שקלוד יזיז עכבר, יקליד, יפעיל תוכנות, יעשה פעולות בממשק ויזואלי שאין לו API — הדסקטופ יודע לעשות את זה (Computer Use). VS Code לא.</p>
+      </div>
+      <div class="card">
+        <h3>משימות מתוזמנות בענן</h3>
+        <p>אם רוצים שמשימה תרוץ בלילה, כשהמחשב כבוי — הדסקטופ יכול להריץ בענן. VS Code תלוי במחשב שדולק.</p>
+      </div>
+      <div class="card">
+        <h3>תצוגה ויזואלית</h3>
+        <p>אם צריך שקלוד יצייר תרשים, יציג תוצאה בחלון מוכן, יסרוק מסך — לדסקטופ יש כלים לזה.</p>
+      </div>
+    </div>
+    <p style="margin-top:18px"><strong>לעבודה עם קבצים, כלים, אוטומציות, חיבור למאגרי מידע — VS Code מנצח בכל פרמטר.</strong></p>
+  </div>
+</section>
+
+<!-- ===================== FINAL CTA ===================== -->
+<section class="final" id="end">
+  <div class="wrap">
+    <h2>מוכן להפסיק להתאבק בכלי — ולהתחיל לבנות?</h2>
+    <a class="cta center" href="/course/register" style="margin-top:18px">להרשמה לקורס <span class="arr">←</span></a>
+    <p class="pay">תשלום ב-Bit, PayBox, או העברה בנקאית — ישראלי, מיידי, בלי למסור כרטיס אשראי לאתר זר.</p>
+    <p class="closing">"אדריכל אחד. תפוקה של משרד שלם."</p>
+  </div>
+</section>
+
+<!-- sticky CTA נייד -->
+<div class="sticky-cta">
+  <a href="/course/register">להרשמה לקורס <span class="arr">←</span></a>
+</div>
+
+<script>
+(function(){
+  var themes = [
+    {key:'autocad',  name:'AutoCAD',  accent:'#E51050'},
+    {key:'revit',    name:'Revit',    accent:'#176BFF'},
+    {key:'sketchup', name:'SketchUp', accent:'#005F9E'},
+    {key:'rhino',    name:'Rhino',    accent:'#990000'}
+  ];
+  var i = 0;
+  var svgs = document.querySelectorAll('.theme-svg');
+  var dot = document.querySelector('.theme-badge .dot');
+  var nm  = document.querySelector('.theme-badge .nm');
+  var root = document.documentElement;
+
+  function apply(idx){
+    var t = themes[idx];
+    svgs.forEach(function(s){ s.classList.toggle('active', s.dataset.theme===t.key); });
+    root.style.setProperty('--accent', t.accent);
+    if(dot){ dot.style.background=t.accent; dot.style.boxShadow='0 0 10px '+t.accent; }
+    if(nm){ nm.textContent=t.name; }
+  }
+  apply(0);
+  setInterval(function(){ i=(i+1)%themes.length; apply(i); }, 3800);
+})();
+</script>
+</body>
+</html>
